@@ -1,6 +1,4 @@
-console.log('ccc')
-
-
+console.log('ccc');
 
 enum Direction {
     Up = 1,
@@ -8,8 +6,7 @@ enum Direction {
     Left,
     Right
 }
-console.log(Direction)
-
+console.log(Direction);
 
 function ccc(a: any): void {
     console.log(a);

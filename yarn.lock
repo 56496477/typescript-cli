@@ -1643,6 +1643,12 @@ escodegen@^1.11.0:
   optionalDependencies:
     source-map "~0.6.1"
 
+eslint-config-prettier@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.npm.taobao.org/eslint-config-prettier/download/eslint-config-prettier-6.0.0.tgz#f429a53bde9fc7660e6353910fd996d6284d3c25"
+  dependencies:
+    get-stdin "^6.0.0"
+
 eslint-loader@^2.1.1:
   version "2.2.1"
   resolved "https://registry.npm.taobao.org/eslint-loader/download/eslint-loader-2.2.1.tgz?cache=0&sync_timestamp=1562235844038&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feslint-loader%2Fdownload%2Feslint-loader-2.2.1.tgz#28b9c12da54057af0845e2a6112701a2f6bf8337"
@@ -1652,6 +1658,12 @@ eslint-loader@^2.1.1:
     object-assign "^4.0.1"
     object-hash "^1.1.4"
     rimraf "^2.6.1"
+
+eslint-plugin-prettier@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.npm.taobao.org/eslint-plugin-prettier/download/eslint-plugin-prettier-3.1.0.tgz#8695188f95daa93b0dc54b249347ca3b79c4686d"
+  dependencies:
+    prettier-linter-helpers "^1.0.0"
 
 eslint-scope@^3.7.1:
   version "3.7.3"
@@ -1957,6 +1969,10 @@ fast-deep-equal@^2.0.1:
   version "2.0.1"
   resolved "https://registry.npm.taobao.org/fast-deep-equal/download/fast-deep-equal-2.0.1.tgz?cache=0&sync_timestamp=1562517919182&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ffast-deep-equal%2Fdownload%2Ffast-deep-equal-2.0.1.tgz#7b05218ddf9667bf7f370bf7fdb2cb15fdd0aa49"
 
+fast-diff@^1.1.2:
+  version "1.2.0"
+  resolved "https://registry.npm.taobao.org/fast-diff/download/fast-diff-1.2.0.tgz#73ee11982d86caaf7959828d519cfe927fac5f03"
+
 fast-json-stable-stringify@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/fast-json-stable-stringify/download/fast-json-stable-stringify-2.0.0.tgz#d5142c0caee6b1189f87d3a76111064f86c8bbf2"
@@ -2187,6 +2203,10 @@ get-caller-file@^1.0.1:
 get-caller-file@^2.0.1:
   version "2.0.5"
   resolved "https://registry.npm.taobao.org/get-caller-file/download/get-caller-file-2.0.5.tgz#4f94412a82db32f36e3b0b9741f8a97feb031f7e"
+
+get-stdin@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.npm.taobao.org/get-stdin/download/get-stdin-6.0.0.tgz#9e09bf712b360ab9225e812048f71fde9c89657b"
 
 get-stream@^4.0.0:
   version "4.1.0"
@@ -4181,6 +4201,12 @@ prettier-eslint@^8.8.2:
     typescript "^2.5.1"
     typescript-eslint-parser "^16.0.0"
     vue-eslint-parser "^2.0.2"
+
+prettier-linter-helpers@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/prettier-linter-helpers/download/prettier-linter-helpers-1.0.0.tgz#d23d41fe1375646de2d0104d3454a3008802cf7b"
+  dependencies:
+    fast-diff "^1.1.2"
 
 prettier@^1.15.3, prettier@^1.7.0:
   version "1.18.2"

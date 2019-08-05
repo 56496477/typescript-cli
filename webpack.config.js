@@ -194,12 +194,12 @@ class WebpackConfig {
                         {
                             loader: 'ts-loader'
                         },
-                        {
-                            loader: 'eslint',
-                            options: {
-                                fix: true
-                            }
-                        }
+                        // {
+                        //     loader: 'eslint',
+                        //     options: {
+                        //         fix: true
+                        //     }
+                        // }
                     ],
                     include: [
                         resolve('./src'),

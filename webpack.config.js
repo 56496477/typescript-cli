@@ -123,7 +123,7 @@ class WebpackConfig {
 
     get resolve() {
         return {
-            extensions: ['.js', '.ts', '.css', 'less'],
+            extensions: ['.ts', '.tsx', '.css', 'less'],
             alias: {
                 src: resolve('./src'),
                 model: resolve('./src/model'),
@@ -189,17 +189,17 @@ class WebpackConfig {
         const common = {
             rules: [
                 {
-                    test: /\.ts?$/,
+                    test: /\.tsx?$/i,
                     use: [
                         {
                             loader: 'ts-loader'
                         },
-                        // {
-                        //     loader: 'eslint',
-                        //     options: {
-                        //         fix: true
-                        //     }
-                        // }
+                        {
+                            loader: 'eslint',
+                            options: {
+                                fix: true
+                            }
+                        }
                     ],
                     include: [
                         resolve('./src'),

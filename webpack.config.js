@@ -123,7 +123,7 @@ class WebpackConfig {
 
     get resolve() {
         return {
-            extensions: ['.ts', '.tsx', '.css', 'less'],
+            extensions: ['.ts', '.tsx', '.js', '.css', 'less'],
             alias: {
                 src: resolve('./src'),
                 model: resolve('./src/model'),

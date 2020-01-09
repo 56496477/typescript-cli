@@ -36,9 +36,9 @@
 class Student {
     public fullName: string;
     public constructor(
-        public firstName: string,
-        public middleInitial: string,
-        public lastName: string
+        firstName: string,
+        middleInitial: string,
+        lastName: string
     ) {
         this.fullName = firstName + ' ' + middleInitial + ' ' + lastName;
     }
@@ -46,9 +46,9 @@ class Student {
 
 interface Person {
     fullName: string;
-    firstName: string;
-    middleInitial: string;
-    lastName: string;
+    firstName?: string;
+    middleInitial?: string;
+    lastName?: string;
 }
 
 function greeter(person: Person): string {

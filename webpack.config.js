@@ -77,8 +77,8 @@ class WebpackConfig {
                 ...commonPlugins,
                 new webpack.HotModuleReplacementPlugin(),
                 new HtmlPlugin({
-                    template: resolve('./public/index.dev.html'),
-                    favicon: resolve('./public/icon.ico'),
+                    template: resolve('./public/index.html'),
+                    favicon: resolve('./public/favicon.ico'),
                     rootPath: '/'
                 }),
                 new FriendlyErrors({

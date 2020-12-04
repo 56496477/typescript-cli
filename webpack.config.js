@@ -42,9 +42,9 @@ class WebpackConfig {
                     parallel: os.cpus().length,
                     uglifyOptions: {
                         compress: {
-                            warnings: false,
                             drop_console: true,
-                            drop_debugger: true
+                            drop_debugger: true,
+                            pure_funcs: ['console.log']
                         },
                         output: {
                             comments: false
@@ -77,9 +77,8 @@ class WebpackConfig {
                 ...commonPlugins,
                 new webpack.HotModuleReplacementPlugin(),
                 new HtmlPlugin({
-                    template: resolve('./public/index.html'),
-                    filename: 'index.html',
-                    favicon: resolve('./public/favicon.ico'),
+                    template: resolve('./public/index.dev.html'),
+                    favicon: resolve('./public/icon.ico'),
                     rootPath: '/'
                 }),
                 new FriendlyErrors({
@@ -99,9 +98,9 @@ class WebpackConfig {
                 }),
                 new HtmlPlugin({
                     inject: true,
-                    template: resolve('./public/index.html'),
+                    template: resolve('./public/index.prod.html'),
                     rootPath: publicPath,
-                    favicon: resolve('./public/favicon.ico'),
+                    favicon: resolve('./public/icon.ico'),
                     minify: {
                         removeComments: true,
                         collapseWhitespace: true,
@@ -165,7 +164,7 @@ class WebpackConfig {
             noInfo: true,
             quiet: true,
             clientLogLevel: 'none',
-            overlay:  {
+            overlay: {
                 warnings: true,
                 errors: true
             },
@@ -175,13 +174,11 @@ class WebpackConfig {
 
     get devtool() {
         let devtool = false;
-
         if (this.BUILD_ENV === 'local') {
             devtool = 'cheap-module-source-map';
         } else if (env[this.BUILD_ENV].sourceMap) {
             devtool = 'source-map';
         }
-
         return devtool;
     }
 
@@ -194,13 +191,13 @@ class WebpackConfig {
                         {
                             loader: 'ts-loader'
                         },
-                        {
+                        process.env.node === 'production' && {
                             loader: 'eslint',
                             options: {
                                 fix: true
                             }
                         }
-                    ],
+                    ].filter(Boolean),
                     include: [
                         resolve('./src'),
                         resolve('./node_modules/build-dev-server-client')
@@ -299,6 +296,25 @@ class WebpackConfig {
         return modules[this.NODE_ENV];
     }
 
+    get externals() {
+        if (process.env.NODE_ENV === 'production') {
+            return {
+                react: 'React',
+                'react-dom': 'ReactDOM',
+                axios: 'axios',
+                history: 'history',
+                'react-router-dom': 'ReactRouterDOM',
+                'styled-components': 'styled',
+                trianglify: 'Trianglify',
+                lodash: '_',
+                moment: 'moment',
+                antd: 'antd'
+            };
+        } else {
+            return {};
+        }
+    }
+
     getConfig() {
         const { publicPath, outputPath } = globalConfig;
         const {
@@ -308,14 +324,15 @@ class WebpackConfig {
             devtool,
             devServer,
             module,
-            optimization
+            optimization,
+            externals
         } = this;
         const filename = DevUtil.getOutputFileName(NODE_ENV);
 
-        return {
+        let ret = {
             mode: NODE_ENV,
             entry: {
-                app: resolve('src/index.ts')
+                app: resolve('src/index.tsx')
             },
             output: {
                 filename,
@@ -329,8 +346,11 @@ class WebpackConfig {
             devServer,
             devtool,
             module,
-            optimization
+            optimization,
+            externals
         };
+
+        return ret;
     }
 }
 

@@ -1,28 +1,24 @@
 {
-    "name": "tms-react-project",
-    "version": "1.0.0",
+    "name": "@tms/login-component",
+    "version": "0.0.3",
     "scripts": {
         "start": "cross-env BUILD_ENV=local webpack-dev-server --progress",
         "build-dev": "cross-env BUILD_ENV=dev webpack --progress",
         "build-test": "cross-env BUILD_ENV=test webpack --progress",
         "build-uat": "cross-env BUILD_ENV=uat webpack --progress",
         "build-prod": "cross-env BUILD_ENV=prod webpack --progress",
-        "build-lib": "cross-env BUILD_ENV=prod webpack --config ./webpack.lib.js --progress",
-        "test": "cross-env BUILD_ENV=local TEST=1 jest"
+        "build-lib": "cross-env BUILD_ENV=prod NODE_ENV=production webpack --config ./webpack.lib.js --progress"
     },
     "main": "./lib/app.js",
     "dependencies": {
-        "@types/history": "^4.7.5",
         "@types/react-router-dom": "^5.1.3",
-        "antd": "^4.0.0",
-        "history": "^4.10.1",
+        "antd": "3.26.15",
         "lodash": "^4.17.15",
         "react": "^16.13.0",
         "react-dom": "^16.13.0",
         "react-router-dom": "^5.1.2",
         "reset-css": "^5.0.1",
-        "styled-components": "^5.0.1",
-        "trianglify": "^2.0.0"
+        "styled-components": "^5.0.1"
     },
     "devDependencies": {
         "@types/lodash": "^4.14.149",
@@ -53,9 +49,17 @@
         "style-loader": "^0.23.1",
         "ts-loader": "^6.2.1",
         "typescript": "^3.8.3",
-        "uglifyjs-webpack-plugin": "^2.0.1",
+        "uglifyjs-webpack-plugin": "1.3.0",
         "webpack": "^4.28.1",
         "webpack-cli": "^3.1.2",
         "webpack-dev-server": "^3.1.10"
+    },
+    "peerDependencies": {
+        "antd": ">=3.0.0",
+        "axios": ">=0.1.0",
+        "lodash": ">=3.0.0",
+        "moment": ">=2.0.0",
+        "react": ">=16.0.0",
+        "react-dom": ">=16.0.0"
     }
 }

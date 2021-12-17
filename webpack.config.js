@@ -6,7 +6,7 @@ const { env } = require('./config/env');
 const { proxy } = require('./config/proxy');
 const CleanPlugin = require('clean-webpack-plugin');
 const CssToFile = require('mini-css-extract-plugin');
-const HtmlPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { loader: exLoader } = CssToFile;
 const UglifyJs = require('uglifyjs-webpack-plugin');
 const UglifyCss = require('optimize-css-assets-webpack-plugin');
@@ -76,7 +76,7 @@ class WebpackConfig {
             development: [
                 ...commonPlugins,
                 new webpack.HotModuleReplacementPlugin(),
-                new HtmlPlugin({
+                new HtmlWebpackPlugin({
                     template: resolve('./public/index.html'),
                     favicon: resolve('./public/favicon.ico'),
                     rootPath: '/'
@@ -96,7 +96,7 @@ class WebpackConfig {
                     filename: 'assets/style/[name].[contenthash:7].css',
                     allChunks: true
                 }),
-                new HtmlPlugin({
+                new HtmlWebpackPlugin({
                     inject: true,
                     template: resolve('./public/index.prod.html'),
                     rootPath: publicPath,
@@ -137,38 +137,25 @@ class WebpackConfig {
 
     get resolveLoader() {
         return {
-            moduleExtensions: ['-loader']
+            mainFields: ['loader']
         };
     }
 
     get devServer() {
         const { publicPath, port, host } = globalConfig;
         return {
-            contentBase: [resolve('./public')],
-            port,
-            publicPath,
-            historyApiFallback: {
-                rewrites: [
-                    {
-                        from: new RegExp(`^${publicPath}`),
-                        to: `${publicPath}index.html`
-                    }
-                ]
+            static: {
+                directory: resolve('./public'),
+                staticOptions: {},
+                publicPath,
+                serveIndex: true,
+                watch: true,
             },
-            compress: true,
+            port,
             hot: true,
             host,
             open: true,
-            openPage: publicPath.slice(1),
-            inline: true,
-            noInfo: true,
-            quiet: true,
-            clientLogLevel: 'none',
-            overlay: {
-                warnings: true,
-                errors: true
-            },
-            proxy
+            // proxy
         };
     }
 
@@ -190,30 +177,16 @@ class WebpackConfig {
                     use: [
                         {
                             loader: 'ts-loader'
-                        },
-                        process.env.node === 'production' && {
-                            loader: 'eslint',
-                            options: {
-                                fix: true
-                            }
                         }
-                    ].filter(Boolean),
+                    ],
                     include: [
                         resolve('./src'),
-                        resolve('./node_modules/build-dev-server-client')
                     ],
                     exclude: /node_modules/
                 },
                 {
                     exclude: [/\.(js|mjs|jsx|ts|tsx|html|json|less|css)$/],
-                    use: [
-                        {
-                            loader: 'file',
-                            options: {
-                                name: 'assets/media/[name].[hash:8].[ext]'
-                            }
-                        }
-                    ]
+                    type: 'asset/resource'
                 }
             ]
         };
@@ -329,10 +302,10 @@ class WebpackConfig {
         } = this;
         const filename = DevUtil.getOutputFileName(NODE_ENV);
 
-        let ret = {
+        return {
             mode: NODE_ENV,
             entry: {
-                app: resolve('src/index.tsx')
+                app: resolve('src/index.ts')
             },
             output: {
                 filename,
@@ -349,8 +322,6 @@ class WebpackConfig {
             optimization,
             externals
         };
-
-        return ret;
     }
 }
 

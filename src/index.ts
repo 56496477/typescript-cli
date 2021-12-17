@@ -5,3 +5,5 @@
 // import 'src/view/abstract.ts';
 // import 'src/view/class-interface.ts';
 import 'src/view/t.ts';
+
+console.log(111)

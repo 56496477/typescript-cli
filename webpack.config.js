@@ -154,7 +154,7 @@ class WebpackConfig {
                     test: /\.m?(j|t)sx?$/i,
                     use: [
                         {
-                            loader: 'babel-loader',
+                            loader: 'ts-loader',
                         },
                     ],
                     include: [
@@ -163,7 +163,7 @@ class WebpackConfig {
                     exclude: /node_modules/
                 },
                 {
-                    exclude: [/\.(js|mjs|jsx|ts|tsx|html|json|less|css)$/],
+                    exclude: [/\.(mjs|jsx|ts|tsx|html|json|less|css)$/],
                     type: 'asset/resource'
                 },
                 {

@@ -115,12 +115,6 @@ class WebpackConfig {
         };
     }
 
-    get resolveLoader() {
-        return {
-            // mainFields: ['loader']
-        };
-    }
-
     get devServer() {
         const { publicPath, port, host } = globalConfig;
         return {
@@ -228,7 +222,6 @@ class WebpackConfig {
         const { publicPath, outputPath } = globalConfig;
         const {
             NODE_ENV,
-            resolveLoader,
             plugins,
             devtool,
             devServer,
@@ -250,7 +243,6 @@ class WebpackConfig {
                 path: outputPath
             },
             resolve: this.resolve,
-            resolveLoader,
             plugins,
             devServer,
             devtool,

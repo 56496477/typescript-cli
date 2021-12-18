@@ -5,14 +5,11 @@ const { DevUtil } = require('./config/utils');
 const { env } = require('./config/env');
 const { proxy } = require('./config/proxy');
 const CleanPlugin = require('clean-webpack-plugin');
-const CssToFile = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { loader: exLoader } = CssToFile;
-const UglifyJs = require('uglifyjs-webpack-plugin');
-const UglifyCss = require('optimize-css-assets-webpack-plugin');
-const safeParser = require('postcss-safe-parser');
+const TerserPlugin = require("terser-webpack-plugin");
 const FriendlyErrors = require('friendly-errors-webpack-plugin');
-const os = require('os');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 class WebpackConfig {
     constructor(BUILD_ENV = 'local') {
@@ -21,14 +18,12 @@ class WebpackConfig {
         } else {
             process.env.NODE_ENV = 'production';
         }
-
         this.NODE_ENV = process.env.NODE_ENV;
         this.BUILD_ENV = BUILD_ENV;
     }
 
     get optimization() {
         if (this.NODE_ENV === 'development') return;
-
         return {
             splitChunks: {
                 name: 'vendors',
@@ -37,25 +32,11 @@ class WebpackConfig {
             runtimeChunk: {
                 name: 'runtime'
             },
+            minimize: true,
             minimizer: [
-                new UglifyJs({
-                    parallel: os.cpus().length,
-                    uglifyOptions: {
-                        compress: {
-                            drop_console: true,
-                            drop_debugger: true,
-                            pure_funcs: ['console.log']
-                        },
-                        output: {
-                            comments: false
-                        }
-                    }
-                }),
-                new UglifyCss({
-                    cssProcessorOptions: {
-                        parser: safeParser,
-                        discardComments: { removeAll: true }
-                    }
+                new TerserPlugin(),
+                new CssMinimizerPlugin({
+                    parallel: true
                 })
             ]
         };
@@ -65,7 +46,6 @@ class WebpackConfig {
         const { NODE_ENV, BUILD_ENV } = this;
         const { outputPath, publicPath, host, port } = globalConfig;
         const commonPlugins = [
-            //new webpack.IgnorePlugin(/^\.\/locale$/ , /moment$/) ,
             new webpack.DefinePlugin(DevUtil.stringifyEnv(env[BUILD_ENV])),
             new webpack.ContextReplacementPlugin(
                 /moment[\\\/]locale$/,
@@ -92,15 +72,15 @@ class WebpackConfig {
             production: [
                 ...commonPlugins,
                 new CleanPlugin([outputPath], { allowExternal: true }),
-                new CssToFile({
+                new MiniCssExtractPlugin({
                     filename: 'assets/style/[name].[contenthash:7].css',
-                    allChunks: true
+                    chunkFilename: '[id].css',
                 }),
                 new HtmlWebpackPlugin({
                     inject: true,
-                    template: resolve('./public/index.prod.html'),
+                    template: resolve('./public/index.html'),
                     rootPath: publicPath,
-                    favicon: resolve('./public/icon.ico'),
+                    favicon: resolve('./public/favicon.ico'),
                     minify: {
                         removeComments: true,
                         collapseWhitespace: true,
@@ -137,7 +117,7 @@ class WebpackConfig {
 
     get resolveLoader() {
         return {
-            mainFields: ['loader']
+            // mainFields: ['loader']
         };
     }
 
@@ -154,8 +134,8 @@ class WebpackConfig {
             port,
             hot: true,
             host,
-            open: true,
-            // proxy
+            open: [`${publicPath}`],
+            proxy
         };
     }
 
@@ -170,14 +150,18 @@ class WebpackConfig {
     }
 
     get module() {
-        const common = {
+        const cssLoader = {
+            development: 'style',
+            production: MiniCssExtractPlugin.loader
+        }
+        return {
             rules: [
                 {
-                    test: /\.tsx?$/i,
+                    test: /\.m?(j|t)sx?$/i,
                     use: [
                         {
-                            loader: 'ts-loader'
-                        }
+                            loader: 'babel-loader',
+                        },
                     ],
                     include: [
                         resolve('./src'),
@@ -187,56 +171,15 @@ class WebpackConfig {
                 {
                     exclude: [/\.(js|mjs|jsx|ts|tsx|html|json|less|css)$/],
                     type: 'asset/resource'
-                }
-            ]
-        };
-
-        const development = {
-            rules: [
-                ...common.rules,
-                {
-                    test: /\.css$/,
-                    use: [
-                        {
-                            loader: 'style'
-                        },
-                        {
-                            loader: 'css'
-                        }
-                    ]
                 },
                 {
-                    test: /\.less$/,
-                    use: [
-                        {
-                            loader: 'style'
-                        },
-                        {
-                            loader: 'css'
-                        },
-                        {
-                            loader: 'less',
-                            options: {
-                                javaEnabled: true,
-                                javascriptEnabled: true
-                            }
-                        }
-                    ]
-                }
-            ]
-        };
-
-        const production = {
-            rules: [
-                ...common.rules,
-                {
                     test: /\.css$/,
                     use: [
                         {
-                            loader: exLoader
+                            loader: cssLoader[this.NODE_ENV]
                         },
                         {
-                            loader: 'css'
+                            loader: 'css-loader'
                         }
                     ]
                 },
@@ -244,13 +187,13 @@ class WebpackConfig {
                     test: /\.less/,
                     use: [
                         {
-                            loader: exLoader
+                            loader: cssLoader[this.NODE_ENV]
                         },
                         {
-                            loader: 'css'
+                            loader: 'css-loader'
                         },
                         {
-                            loader: 'less',
+                            loader: 'less-loader',
                             options: {
                                 javaEnabled: true,
                                 javascriptEnabled: true
@@ -260,13 +203,6 @@ class WebpackConfig {
                 }
             ]
         };
-
-        const modules = {
-            development,
-            production
-        };
-
-        return modules[this.NODE_ENV];
     }
 
     get externals() {

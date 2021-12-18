@@ -5,7 +5,6 @@ const {sep} = require('path');
 exports.DevUtil = class DevUtil {
     static getLocalHost() {
         let host = '127.0.0.1';
-
         for (const dev in iFaces) {
             if (iFaces.hasOwnProperty(dev)) {
                 iFaces[ dev ].forEach(function(details) {
@@ -18,21 +17,17 @@ exports.DevUtil = class DevUtil {
                 });
             }
         }
-
         return host;
     }
 
     static stringifyEnv(env) {
         const {NODE_ENV} = process.env;
-        console.log(env);
         return {
             'process.env': JSON.stringify({
                 NODE_ENV ,
                 ...env
             })
         };
-
-
     }
 
     static getPublicPath() {

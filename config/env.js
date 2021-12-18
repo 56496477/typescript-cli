@@ -12,6 +12,6 @@ exports.env = {
         url:'ddd'
     },
     local: {
-        url:'eeee'
+        url:'eee'
     }
 };

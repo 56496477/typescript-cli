@@ -6,10 +6,10 @@ const { env } = require('./config/env');
 const { proxy } = require('./config/proxy');
 const CleanPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const TerserPlugin = require("terser-webpack-plugin");
+const TerserPlugin = require('terser-webpack-plugin');
 const FriendlyErrors = require('friendly-errors-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 class WebpackConfig {
     constructor(BUILD_ENV = 'local') {
@@ -102,16 +102,26 @@ class WebpackConfig {
 
     get resolve() {
         return {
-            extensions: ['.ts', '.tsx', '.js', '.css', 'less'],
+            // extensions: ['.js', 'jsx','.css', 'less'],
             alias: {
                 src: resolve('./src'),
                 model: resolve('./src/model'),
                 view: resolve('./src/view'),
+                container: resolve('./src/container'),
                 component: resolve('./src/component'),
                 router: resolve('./src/router'),
                 assets: resolve('./public/assets'),
                 utils: resolve('./src/utils')
             }
+        };
+    }
+
+    get resolveLoader() {
+        return {
+            // moduleExtensions: ['-loader']
+            extensions: ['.ts', '.tsx'],
+            modules: ['node_modules'],
+            mainFields: ['loader', 'main'],
         };
     }
 
@@ -147,11 +157,11 @@ class WebpackConfig {
         const cssLoader = {
             development: 'style',
             production: MiniCssExtractPlugin.loader
-        }
+        };
         return {
             rules: [
                 {
-                    test: /\.m?(j|t)sx?$/i,
+                    test: /\.tsx?$/i,
                     use: [
                         {
                             loader: 'ts-loader',
@@ -163,7 +173,7 @@ class WebpackConfig {
                     exclude: /node_modules/
                 },
                 {
-                    exclude: [/\.(mjs|jsx|ts|tsx|html|json|less|css)$/],
+                    exclude: [/\.(ts|tsx|js|mjs|jsx|html|json|less|css)$/],
                     type: 'asset/resource'
                 },
                 {
@@ -227,14 +237,15 @@ class WebpackConfig {
             devServer,
             module,
             optimization,
-            externals
+            externals,
+            resolveLoader
         } = this;
         const filename = DevUtil.getOutputFileName(NODE_ENV);
 
         return {
             mode: NODE_ENV,
             entry: {
-                app: resolve('src/index.ts')
+                app: resolve('src/index.tsx')
             },
             output: {
                 filename,
@@ -246,6 +257,7 @@ class WebpackConfig {
             plugins,
             devServer,
             devtool,
+            resolveLoader,
             module,
             optimization,
             externals

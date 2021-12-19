@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
       "outDir": "./dist",
+      "sourceMap": true,
       "module": "commonjs",
       "removeComments": true,
       "emitDecoratorMetadata": true,
